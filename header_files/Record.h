@@ -36,6 +36,11 @@ private:
 public:
 	Record ();
 	~Record();
+	Record(const Record& r2); //copy constructor 
+	const Record& operator=(const Record& that); //assignment operator overwrite
+	Record(Record &&other); //move constructor 
+	Record& operator=(Record&& other) ;
+
 
 	// suck the contents of the record fromMe into this; note that after
 	// this call, fromMe will no longer have anything inside of it
@@ -65,6 +70,9 @@ public:
 	// prints the contents of the record; this requires
 	// that the schema also be given so that the record can be interpreted
 	void Print (Schema *mySchema);
+
+	//get size of Record in bits
+	int getBitSize();
 };
 
 #endif

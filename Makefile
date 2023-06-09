@@ -1,19 +1,19 @@
-CC = g++ -O2 -Wno-deprecated -Iheader_files
+CC = g++ -O2 -Wno-deprecated -Wall -Iheader_files
 
 header_tag = -Iheader_files
 
 SRC_DIR = src
-SRCS = Record.cc Comparison.cc ComparisonEngine.cc Schema.cc File.cc DBFile.cc test.cc main.cc
+SRCS = Record.cc Comparison.cc ComparisonEngine.cc Schema.cc File.cc DBFile.cc test.cc main.cc BigQ.cc Pipe.cc
 SRCS := $(addprefix $(SRC_DIR)/, $(SRCS))
 
 tag = -i.bak
-tag2 = -ll
+tag2 = -ll -lpthread
 OStag = rest
 
 ifdef linux
 OStag = linux
 tag = -n
-tag2 = -lfl
+tag2 = -lfl -lpthread
 endif
 
 test.out: Record.o Comparison.o ComparisonEngine.o Schema.o File.o DBFile.o y.tab.o lex.yy.o test.o
