@@ -1,9 +1,16 @@
 CC = g++ -O2 -Wno-deprecated -Iheader_files
 
+header_tag = -Iheader_files
+
+SRC_DIR = src
+SRCS = Record.cc Comparison.cc ComparisonEngine.cc Schema.cc File.cc DBFile.cc test.cc main.cc
+SRCS := $(addprefix $(SRC_DIR)/, $(SRCS))
+
+
+
 tag = -i.bak
 tag2 = -ll
 OStag = rest
-header_tag = -Iheader_files
 
 ifdef linux
 OStag = linux
@@ -17,29 +24,33 @@ test.out: Record.o Comparison.o ComparisonEngine.o Schema.o File.o DBFile.o y.ta
 main: Record.o Comparison.o ComparisonEngine.o Schema.o File.o y.tab.o lex.yy.o main.o
 	$(CC) -o main Record.o Comparison.o ComparisonEngine.o Schema.o File.o y.tab.o lex.yy.o main.o $(tag2)
 	
-test.o: test.cc
-	$(CC) -g -c test.cc
-
-main.o: main.cc
-	$(CC) -g -c main.cc
+%.o: $(SRC_DIR)/%.cc
 	
-Comparison.o: Comparison.cc
-	$(CC) -g -c Comparison.cc
+	$(CC) -g -c $< -o $@
+
+# test.o: test.cc
+# 	$(CC) -g -c test.cc
+
+# main.o: main.cc
+# 	$(CC) -g -c main.cc
 	
-ComparisonEngine.o: ComparisonEngine.cc
-	$(CC) -g -c ComparisonEngine.cc
+# Comparison.o: Comparison.cc
+# 	$(CC) -g -c Comparison.cc
 	
-DBFile.o: DBFile.cc
-	$(CC) -g -c DBFile.cc
+# ComparisonEngine.o: ComparisonEngine.cc
+# 	$(CC) -g -c ComparisonEngine.cc
+	
+# DBFile.o: DBFile.cc
+# 	$(CC) -g -c DBFile.cc
 
-File.o: File.cc
-	$(CC) -g -c File.cc
+# File.o: File.cc
+# 	$(CC) -g -c File.cc
 
-Record.o: Record.cc
-	$(CC) -g -c Record.cc
+# Record.o: Record.cc
+# 	$(CC) -g -c Record.cc
 
-Schema.o: Schema.cc
-	$(CC) -g -c Schema.cc
+# Schema.o: Schema.cc
+# 	$(CC) -g -c Schema.cc
 	
 ifdef linux
 y.tab.o: Parser.y
@@ -61,5 +72,6 @@ clean:
 	rm -f *.o
 	rm -f *.out
 	rm -f y.tab.c
+	rm -f y.tab.c.bak
 	rm -f lex.yy.c
 	rm -f y.tab.h

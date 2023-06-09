@@ -32,7 +32,7 @@ int main () {
 
 	// now open up the text file and start procesing it
         //FILE *tableFile = fopen ("/cise/tmp/dbi_sp11/DATA/10M/lineitem.tbl", "r"); 
-		FILE *tableFile = fopen ("../tpch/tpch-dbgen/lineitem.tbl", "r"); //Anisha : Verify if file is in correct location.
+		FILE *tableFile = fopen ("../data_files/lineitem.tbl", "r"); //Anisha : Verify if file is in correct location.
 
         Record temp;
         Schema mySchema ("catalog", "lineitem");
