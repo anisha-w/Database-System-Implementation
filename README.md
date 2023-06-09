@@ -2,10 +2,10 @@
 A single user database management system in C++, that supports SQL operations like Select, Project, Join and Group By.
 
 ## Project Milestones 
-Project 1 : Implementing Heap File 
-Project 2 : Sort the records
-Project 3 : Implementing Relational Operators
-Project 4 : Query Compilation and Optimization  
+Project 1 : Implementing Heap File     
+Project 2 : Sort the records     
+Project 3 : Implementing Relational Operators      
+Project 4 : Query Compilation and Optimization       
 
 ## Installation 
 
@@ -30,7 +30,7 @@ Generate 1GB data
 ./dbgen -s 1
 ```
 This will generate 8 *.tbl files containing the data in CSV format with | separator
-Copy these files into the required folder destination [Refer folder structure]()
+Copy these files into the required folder destination [Refer folder structure](#folder-structure)
 
 #### Set path
 Open file "test.cc" and set path in below lines 
@@ -45,7 +45,7 @@ const char *catalog_path = "catalog"; // full path of the catalog file
 |-Database-System-Implementation
     |- *.cc files
     |- *.h files
-    |- data_files 
+    |- data_files #(copy t-pch generated files in this folder)
         |- *.tlb files
     |- db_files
         |- *.bin files #(created when tlb files are loaded into the system)
