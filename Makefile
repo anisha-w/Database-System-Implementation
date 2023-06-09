@@ -1,16 +1,15 @@
-CC = g++ -O2 -Wno-deprecated 
+CC = g++ -O2 -Wno-deprecated -Iheader_files
 
 tag = -i.bak
 tag2 = -ll
 OStag = rest
+header_tag = -Iheader_files
 
 ifdef linux
 OStag = linux
 tag = -n
 tag2 = -lfl
 endif
-
-
 
 test.out: Record.o Comparison.o ComparisonEngine.o Schema.o File.o DBFile.o y.tab.o lex.yy.o test.o
 	$(CC) -o test.out Record.o Comparison.o ComparisonEngine.o Schema.o File.o DBFile.o y.tab.o lex.yy.o test.o $(tag2)
@@ -46,17 +45,17 @@ ifdef linux
 y.tab.o: Parser.y
 	yacc -d Parser.y
 	sed $(tag) y.tab.c -e "s/  __attribute__ ((__unused__))$$/# ifndef __cplusplus\n  __attribute__ ((__unused__));\n# endif/" 
-	g++ -c y.tab.c
+	g++ -c $(header_tag) y.tab.c
 else 
 y.tab.o: Parser.y
 	yacc -d Parser.y
 	sed $(tag) -e "s/  __attribute__ ((__unused__))$$/# ifndef __cplusplus\n  __attribute__ ((__unused__));\n# endif/" y.tab.c
-	g++ -c y.tab.c
+	g++ -c $(header_tag) y.tab.c
 endif
 
 lex.yy.o: Lexer.l
 	lex  Lexer.l
-	gcc  -c lex.yy.c
+	gcc -c $(header_tag) lex.yy.c
 
 clean: 
 	rm -f *.o
