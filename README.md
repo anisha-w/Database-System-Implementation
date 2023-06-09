@@ -29,7 +29,7 @@ Generate 1GB data
 ```sh
 ./dbgen -s 1
 ```
-This will generate 8 *.tbl files containing the data in CSV format with | separator
+This will generate 8 *.tbl files containing the data in CSV format with | separator      
 Copy these files into the required folder destination [Refer folder structure](#folder-structure)
 
 #### Set path
@@ -43,8 +43,11 @@ const char *catalog_path = "catalog"; // full path of the catalog file
 #### Folder structure 
 ```sh
 |-Database-System-Implementation
-    |- *.cc files
-    |- *.h files
+    |- Parser files #(.y , .c)
+    |- header_files
+        |- *.h files
+    |- src
+        |- *.cc files
     |- data_files #(copy t-pch generated files in this folder)
         |- *.tlb files
     |- db_files
