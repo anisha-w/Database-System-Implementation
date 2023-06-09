@@ -29,12 +29,14 @@ void test1 () {
 // sequential scan of a DBfile 
 void test2 () {
 
+	cout << " Scan all records for : " << rel->name() << "\n";
 	DBFile dbfile;
 	dbfile.Open (rel->path());
 	dbfile.MoveFirst ();
 
 	Record temp;
 
+	cout << "\n ** Records **\n";
 	int counter = 0;
 	while (dbfile.GetNext (temp) == 1) {
 		counter += 1;
@@ -43,14 +45,14 @@ void test2 () {
 			cout << counter << "\n";
 		}
 	}
-	cout << " scanned " << counter << " recs \n";
+	cout << "\n Total scanned " << counter << " recs \n\n";
 	dbfile.Close ();
 }
 
 // scan of a DBfile and apply a filter predicate
 void test3 () {
 
-	cout << " Filter with CNF for : " << rel->name() << "\n";
+	cout <<" Filter with CNF for : " << rel->name() << "\n";
 
 	CNF cnf; 
 	Record literal;
@@ -62,6 +64,7 @@ void test3 () {
 
 	Record temp;
 
+	cout << "\n ** Records **\n";
 	int counter = 0;
 	while (dbfile.GetNext (temp, cnf, literal) == 1) {
 		counter += 1;
@@ -70,7 +73,7 @@ void test3 () {
 			cout << counter << "\n";
 		}
 	}
-	cout << " selected " << counter << " recs \n";
+	cout << "\n Total selected " << counter << " recs \n\n";
 	dbfile.Close ();
 }
 
@@ -100,8 +103,8 @@ int main () {
 		cout << "\t 4. part \n";
 		cout << "\t 5. partsupp \n";
 		cout << "\t 6. orders \n";
-		cout << "\t 7. lineitem \n \t ";
-		cout << "\t 8. supplier \n \t ";
+		cout << "\t 7. lineitem \n";
+		cout << "\t 8. supplier \n";
 		cin >> findx;
 	}
 

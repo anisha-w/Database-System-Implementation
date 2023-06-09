@@ -16,7 +16,7 @@ DBFile::DBFile () {
 //Create file 
 int DBFile::Create (const char *f_path, fType f_type, void *startup) {
     f1.Open(0,(char*)f_path);
-    cout<<"File created successfully"<<endl;
+    cout<<" File created successfully"<<endl;
     return 1; //Sucessfully created
 }
 
@@ -24,19 +24,19 @@ int DBFile::Create (const char *f_path, fType f_type, void *startup) {
 void DBFile::Load (Schema &f_schema, const char *loadpath) {
     Record r1;
     FILE *tableFile = fopen (loadpath, "r");
-    cout<<"Starting to load file"<<endl;
+    cout<<" Starting to load file"<<endl;
     while (r1.SuckNextRecord (&f_schema, tableFile) == 1) {  
         Add(r1);
     }
     writeBufferToFile(1); //Write last page to buffer
-    cout<<"File loaded successfully. Number of data pages in file "<<f1.GetLength()-1<<endl;
+    cout<<" File loaded successfully. Number of data pages in file "<<f1.GetLength()-1<<endl;
 }
 
 // Open DBFile 
 int DBFile::Open (const char *f_path) {
-    cout<<"Opening file "<<*f_path<<endl;
+    cout<<"\n Opening file "<<*f_path<<endl;
     f1.Open(1,(char*)f_path);
-    cout<<"File opened successfully"<<endl;
+    cout<<" File opened successfully"<<endl;
     return 1;
 }
 
