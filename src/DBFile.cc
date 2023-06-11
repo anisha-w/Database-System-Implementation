@@ -36,7 +36,7 @@ void DBFile::Load (Schema &f_schema, const char *loadpath) {
 int DBFile::Open (const char *f_path) {
     cout<<"\n Opening file "<<*f_path<<endl;
     f1.Open(1,(char*)f_path);
-    cout<<" File opened successfully"<<endl;
+    cout<<" DB File opened successfully"<<endl;
     return 1;
 }
 
