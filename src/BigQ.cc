@@ -15,7 +15,7 @@ void sortTPMMSMerge(vector<Record *>& v, OrderMaker &sortorder, int s, int m, in
 
 	while (i <= m && j <= e) {
 
-		if (ceng.Compare(v[i], v[j],&sortorder)>0) {
+		if (ceng.Compare(v[i], v[j],&sortorder)<0) {
 			temp.push_back(v[i]);
 			++i;
 		}
