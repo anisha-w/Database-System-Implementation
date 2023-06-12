@@ -7,12 +7,13 @@ Project 2 : Sort the records
 Project 3 : Implementing Relational Operators      
 Project 4 : Query Compilation and Optimization       
 
-## Installation 
+## Installation and Execution
 
+### Installation 
 #### Step 1 : Download code
 Download code files into a folder 
 
-#### Step 2 : Install TPC-H Data files 
+#### Step 2 : Install TPC-H Data files Generator
 
 ```sh
 mkdir ~/datafilesgit
@@ -32,29 +33,29 @@ Generate 1GB data
 This will generate 8 *.tbl files containing the data in CSV format with | separator      
 Copy these files into the required folder destination [Refer folder structure](#folder-structure)
 
-#### Set path
-Open file "test.cc" and set path in below lines 
+#### Step 3 : Set path
+Open file "test.h" and set path in below lines 
 ```gcc
 const char *dbfile_dir = "./db_files/"; // dir where binary heap files should be stored
 const char *tpch_dir ="./data_files/"; // dir where dbgen tpch files (extension *.tbl) can be found
 const char *catalog_path = "catalog"; // full path of the catalog file
 ```
 
-#### Folder structure 
+#### Step 4 : Verify Folder structure 
 ```sh
 |-Database-System-Implementation
-    |- Parser files #(.y , .c)
-    |- header_files
+    |- code files #(.y , .c)    # Downloaded code files 
+    |- header_files             # Downloaded code files 
         |- *.h files
-    |- src
+    |- src                      # Downloaded code files 
         |- *.cc files
-    |- data_files #(copy t-pch generated files in this folder)
+    |- data_files               # (copy t-pch generated files in this folder)
         |- *.tlb files
-    |- db_files
-        |- *.bin files #(created when tlb files are loaded into the system)
+    |- db_files                 # Create folder 
+        |- *.bin files          # (created when tlb files are loaded into the system)
 ```
 
-## Execution
+### Execution
 
 #### Compile
 ```sh
@@ -70,3 +71,16 @@ make -Bf MakeFile main
 ```sh
 ./testscript.sh
 ```
+## Implementation 
+
+### How is the data stored in the system?
+Data imported from tlb file is stored in a DBFile object. The structure of the DB file is given below. The file type is .bin
+
+<div align="center">
+<img width="616" alt="image" src="https://github.com/anisha-w/Database-System-Implementation/assets/36306448/ce5bc033-d8a0-4755-8120-a083e5307637">           
+</div>
+
+Each record extract from the tlb file is encoded in binary and stored as the following structure. Each record is of variable size. 
+<div align="center">
+<img width="702" alt="image" src="https://github.com/anisha-w/Database-System-Implementation/assets/36306448/e9de6845-dbaf-467c-8f80-25006ae9f324">
+</div>

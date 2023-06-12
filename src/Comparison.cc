@@ -118,6 +118,50 @@ void OrderMaker :: Print () {
 }
 
 
+int CNF :: GetSortOrders (OrderMaker &left) {
+
+	// initialize the size of the OrderMaker
+	left.numAtts = 0;
+
+	// loop through all of the disjunctions in the CNF and find those
+	// that are acceptable for use in a sort ordering
+	for (int i = 0; i < numAnds; i++) {
+		
+		// if we don't have a disjunction of length one, then it
+		// can't be acceptable for use with a sort ordering
+		if (orLens[i] != 1) {
+			continue;
+		}
+
+		// made it this far, so first verify that it is an equality check
+		if (orList[i][0].op != Equals) {
+			continue;
+		}
+
+		// now verify that it operates over atts from both tables
+		if (!((orList[i][0].operand1 == Left && orList[i][0].operand2 == Right) ||
+		      (orList[i][0].operand2 == Left && orList[i][0].operand1 == Right))) {
+			continue;		
+		}
+
+		if (orList[i][0].operand1 == Left) {
+			left.whichAtts[left.numAtts] = orList[i][0].whichAtt1;
+			left.whichTypes[left.numAtts] = orList[i][0].attType;	
+		}	
+
+
+		if (orList[i][0].operand2 == Left) {
+                        left.whichAtts[left.numAtts] = orList[i][0].whichAtt2;
+                        left.whichTypes[left.numAtts] = orList[i][0].attType;
+                }
+
+
+		left.numAtts++;
+
+	}
+	return left.numAtts;
+
+}
 
 int CNF :: GetSortOrders (OrderMaker &left, OrderMaker &right) {
 
@@ -173,7 +217,7 @@ int CNF :: GetSortOrders (OrderMaker &left, OrderMaker &right) {
 		left.numAtts++;
 		right.numAtts++;
 	}
-	
+
 	return left.numAtts;
 
 }
@@ -476,7 +520,7 @@ void CNF :: GrowFromParseTree (struct AndList *parseTree, Schema *mySchema,
 				
 				// see if we can find this attribute in the schema
 				if (mySchema->Find (myOr->left->left->value) != -1) {
-					cnf.orList[whichAnd][whichOr].operand1 = Left;
+					cnf.orList[whichAnd][whichOr].operand1 = Left;	
 					cnf.orList[whichAnd][whichOr].whichAtt1 =
 						mySchema->Find (myOr->left->left->value);	
 					typeLeft = mySchema->FindType (myOr->left->left->value);
@@ -525,7 +569,7 @@ void CNF :: GrowFromParseTree (struct AndList *parseTree, Schema *mySchema,
 				
 				// see if we can find this attribute in the left schema
 				if (mySchema->Find (myOr->left->right->value) != -1) {
-					cnf.orList[whichAnd][whichOr].operand2 = Left;
+					cnf.orList[whichAnd][whichOr].operand2 = Right; //ANISHA : COMPARE WITH ORIGINAL CODE IF ISSUES
 					cnf.orList[whichAnd][whichOr].whichAtt2 =
 						mySchema->Find (myOr->left->right->value);	
 					typeRight = mySchema->FindType (myOr->left->right->value);

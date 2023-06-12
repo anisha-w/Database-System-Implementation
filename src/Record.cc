@@ -18,6 +18,44 @@ Record :: ~Record () {
 
 }
 
+Record :: Record(const Record& r2){
+	bits = new char[strlen(r2.bits) + 1];
+	strcpy(bits, r2.bits);
+}
+
+const Record& Record :: operator=(const Record& that)
+{
+	if(this == &that)
+			return *this;
+    
+	delete [] this->bits;
+		bits = new char[strlen(that.bits)+1];
+		strcpy(this->bits, that.bits);
+		return *this;
+}
+
+Record :: Record(Record &&other) {
+        this->bits = other.bits;
+         other.bits = nullptr;
+    }
+
+Record& Record :: operator=(Record&& other) 
+{
+
+   if (this != &other)
+   {
+      // Free the existing resource.
+      delete[] bits;
+
+      // Copy from the source object.
+      bits = other.bits;
+    
+      // Release the data pointer from the source object so that
+      // the destructor does not free the memory multiple times.
+      other.bits = nullptr;
+   }
+   return *this;
+}
 
 int Record :: SuckNextRecord (Schema *mySchema, FILE *textFile) {
 
@@ -362,5 +400,9 @@ void Record :: Print (Schema *mySchema) {
 	cout << "\n";
 }
 
+int Record :: getBitSize(){
+	
+	return ((int *) bits)[0];
+}
 
 

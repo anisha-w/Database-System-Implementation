@@ -84,6 +84,9 @@ public:
 	// for the given comparison
 	int GetSortOrders (OrderMaker &left, OrderMaker &right);
 
+	// for sorting since table (currently unused)
+	int GetSortOrders (OrderMaker &left);
+
 	// print the comparison structure to the screen
 	void Print ();
 
