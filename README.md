@@ -77,10 +77,10 @@ make -Bf MakeFile main
 Data imported from tlb file is stored in a DBFile object. The structure of the DB file is given below. The file type is .bin
 
 <div align="center">
-<img width="608" alt="image" src="https://github.com/anisha-w/Database-System-Implementation/assets/36306448/85ac779d-72af-4b5e-9e03-8d1d09c0d36e">            
+<img width="616" alt="image" src="https://github.com/anisha-w/Database-System-Implementation/assets/36306448/ce5bc033-d8a0-4755-8120-a083e5307637">           
 </div>
 
 Each record extract from the tlb file is encoded in binary and stored as the following structure. Each record is of variable size. 
 <div align="center">
-<img width="701" alt="image" src="https://github.com/anisha-w/Database-System-Implementation/assets/36306448/cbea1070-ee78-426e-a4a1-020af46c49cf">
+<img width="702" alt="image" src="https://github.com/anisha-w/Database-System-Implementation/assets/36306448/e9de6845-dbaf-467c-8f80-25006ae9f324">
 </div>
