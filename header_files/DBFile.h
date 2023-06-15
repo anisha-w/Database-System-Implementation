@@ -20,6 +20,8 @@ private:
 	int bufferNotFull=1; //0 for false( full), 1 for true(not full) 
 	off_t currentPageNo; //Page number of the page that is in buffer
 
+	char fileType[10]; 
+
 public:
 	DBFile (); 
 
@@ -37,6 +39,8 @@ public:
 
 	//When buffer Page is filled. write it to file. 
 	int writeBufferToFile(int emptyBuffer);
+
+	void setFileType(char fileType[10]);
 
 };
 #endif

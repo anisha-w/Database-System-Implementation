@@ -49,7 +49,7 @@ public:
 	}
 
 	void get_cnf (CNF &cnf_pred, Record &literal) {
-		cout << " Enter CNF predicate (when done press ctrl-D):\n\t ";
+		cout << " Enter CNF predicate (when done press ctrl-D):\n ";
   		if (yyparse() != 0) {
 			std::cout << " Can't parse your CNF.\n";
 			exit (1);
