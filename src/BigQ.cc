@@ -1,4 +1,5 @@
 #include "BigQ.h"
+#include <queue>
 
 void sortTPMMSMerge(vector<Record *>& v, OrderMaker &sortorder, int s, int m, int e) {
 	
@@ -52,8 +53,54 @@ void sortTPMMS(vector<Record *>& v, OrderMaker &sortorder, int low, int high) {
 	}
 }
 
+void phaseTwoTMPPS(Pipe &out, OrderMaker &sortorder, File *tmppsFile, int runLength){
+	Page *pageBuffer;
+	Record rec;
+	Record rec2;
+	LessThanByOrder comp(&sortorder);
+	priority_queue<Page*, std::vector<Page*>, LessThanByOrder> q1(comp);
+
+	//for(int i=1; i<tmppsFile->GetLength();i=i+runLength){ //Anisha Temp fix to figure out final logic 
+	for(int i=1; i<tmppsFile->GetLength();i++){ //Anisha : add all pages in queue for now :: add pages in multiples of runlength
+		
+		pageBuffer = new Page();
+		tmppsFile->GetPage(pageBuffer,i-1);
+		q1.push(pageBuffer);
+		//delete pageBuffer;
+	}
+	int emptyPage=0; //0 for false 
+	pageBuffer = new Page();
+	
+	while(!q1.empty()){
+
+		//pageBuffer = new Page();
+		pageBuffer = q1.top();
+		//cout<<"Anisha Page buffer address"<< pageBuffer <<endl; //Anisha : Addresses stay constant for the particular page ; recheck
+		q1.pop(); 
+		
+		emptyPage = pageBuffer->GetFirst(&rec);
+		if(emptyPage!=0){
+			out.Insert(&rec);
+			if(pageBuffer->ReadFirst(&rec2)!=0){
+				q1.push(pageBuffer); 
+			}
+		}
+		//delete pageBuffer;
+	}
+
+}
+
+
 BigQ :: BigQ (Pipe &in, Pipe &out, OrderMaker &sortorder, int runlen) {
 	// read data from in pipe sort them into runlen pages
+	order = sortorder;
+	char tpath[100];
+	char *dir_loc = "./"; //Anisha temp fix
+	sprintf (tpath, "%ssortphaseone.tmp", dir_loc);
+	tmppsTempFile.Open(0,(char*)tpath);
+	Page p1; //Buffer Page to hold records 
+	int pageNotFull=0;
+	off_t pageNumber=0;
 	//Record *r; //wrong. declaring the pointer doesnt create the object and then in consume function we get segmentation fault because it tries to delete the bits of a object that was never created. 
 	Record *r = new Record();
 
@@ -88,8 +135,15 @@ BigQ :: BigQ (Pipe &in, Pipe &out, OrderMaker &sortorder, int runlen) {
 			totalSize=0;
 			sortTPMMS(recordVector, sortorder, 0, recsNo-1);
 			for (long unsigned int i=0;i<recordVector.size();i++){
-				out.Insert(recordVector[i]);
+				pageNotFull = p1.Append(recordVector[i]);
+				if(pageNotFull==0){
+					tmppsTempFile.AddPage(&p1,pageNumber++);
+					p1.EmptyItOut();
+					pageNotFull = p1.Append(recordVector[i]);
+				}
 			}
+			tmppsTempFile.AddPage(&p1,pageNumber++);
+			p1.EmptyItOut(); //ANISHA BREAKTHROUGH 
 			recsNo=0;
 			recordVector.clear();
 		}
@@ -99,12 +153,26 @@ BigQ :: BigQ (Pipe &in, Pipe &out, OrderMaker &sortorder, int runlen) {
 	if(recsNo>0){
 		sortTPMMS(recordVector, sortorder, 0, recsNo-1);
 		for (long unsigned int i=0;i<recordVector.size();i++){
-			out.Insert(recordVector[i]);
+			pageNotFull = p1.Append(recordVector[i]);
+			if(pageNotFull==0){
+				tmppsTempFile.AddPage(&p1,pageNumber++);
+				p1.EmptyItOut();
+				pageNotFull = p1.Append(recordVector[i]);
+			}
+			//out.Insert(recordVector[i]);
 		}
+		tmppsTempFile.AddPage(&p1,pageNumber++);
 	}
     // construct priority queue over sorted runs and dump sorted data 
  	// into the out pipe
 
+	tmppsTempFile.Close();
+
+	tmppsTempFile.Open(1,(char*)tpath);
+	
+	phaseTwoTMPPS(out, sortorder, &tmppsTempFile, runlen);
+
+	remove((char*)tpath); //Anisha check if happening 
     // finally shut down the out pipe
 	out.ShutDown ();
 }

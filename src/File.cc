@@ -63,6 +63,26 @@ int Page :: GetFirst (Record *firstOne) {
 	return 1;
 }
 
+// Just Read first record from page, dont remove record.
+int Page :: ReadFirst (Record *firstOne) {
+
+	// move to the first record
+	myRecs->MoveToStart ();
+
+	// make sure there is data 
+	if (!myRecs->RightLength ()) {
+		return 0;
+	}
+
+	//firstOne = myRecs->Current(0);
+	//Anisha Why did above didnt work? >> because you created a record object in the caller function and passed its address here. 
+	//above replaces that address with current address but caller function uses the object it created. 
+	//to use above code, create a object pointer only and pass it here. 
+	firstOne->Copy(myRecs->Current(0)); 
+	
+
+	return 1;
+}
 
 int Page :: Append (Record *addMe) {
 	char *b = addMe->GetBits();
@@ -160,6 +180,9 @@ void Page :: FromBinary (char *bits) {
 	delete temp;
 }
 
+int Page :: getNumRecs(){
+	return numRecs;
+}
 File :: File () {
 }
 

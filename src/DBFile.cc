@@ -8,6 +8,7 @@
 #include "Defs.h"
 
 #include <iostream>
+#include <cstring>
 
 DBFile::DBFile () {
     currentPageNo=0;
@@ -15,6 +16,23 @@ DBFile::DBFile () {
 
 //Create file 
 int DBFile::Create (const char *f_path, fType f_type, void *startup) {
+    switch(f_type){
+        case heap: //setFileType("heap");
+        	strcpy(fileType,"heap");
+            break;
+        case sorted: setFileType("sorted"); //ANISHA To do : add sorted order
+            break;
+        default: return 0;
+    }
+    char metaDataPath[100];
+    strcpy(metaDataPath,(char*)f_path);
+    strcat(metaDataPath,"header");
+    FILE *metaDataFile = fopen (metaDataPath, "w");
+
+    //fprintf(metaDataFile,fileType,"|\n");
+    fprintf(metaDataFile,"heap|\n");
+    fclose(metaDataFile);
+
     f1.Open(0,(char*)f_path);
     cout<<" File created successfully"<<endl;
     return 1; //Sucessfully created
@@ -34,7 +52,34 @@ void DBFile::Load (Schema &f_schema, const char *loadpath) {
 
 // Open DBFile 
 int DBFile::Open (const char *f_path) {
-    cout<<"\n Opening file "<<*f_path<<endl;
+    char *space = new (std::nothrow) char[100]; //Anisha might have to change
+    int len=0;
+
+    char metaDataPath[100];
+    strcpy(metaDataPath,(char*)f_path);
+    strcat(metaDataPath,"header");
+    cout<<"Opening header file "<<(char*)metaDataPath<<endl;
+    FILE *metaDataFile = fopen(metaDataPath,"r");
+    while (1) {
+        int nextChar = getc (metaDataFile);
+
+        if (nextChar == '|')
+            break;
+        else if (nextChar == EOF) {
+            delete [] space;
+            cout<<"\nData not found in header file"<<endl;
+            return 0;
+        }
+
+        space[len] = nextChar;
+        len++;
+    }
+    space[len]=0; //terminate string 
+
+    strcpy(fileType,space);
+    //ANISHA TODO : Set order 
+    fclose(metaDataFile);
+    cout<<"Opening file "<<(char*)f_path<<endl;
     f1.Open(1,(char*)f_path);
     cout<<" DB File opened successfully"<<endl;
     return 1;
@@ -99,4 +144,9 @@ int DBFile::GetNext (Record &fetchme, CNF &cnf, Record &literal) {
         }
    }
    return 0; 
+}
+
+//Set filetype 
+void DBFile::setFileType(char fileTypeName[10]){
+	strcpy(fileType, fileTypeName);
 }
